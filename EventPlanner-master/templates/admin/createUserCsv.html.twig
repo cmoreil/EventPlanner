@@ -1,0 +1,27 @@
+{% extends 'view/base.html.twig' %}
+
+{% block body %}
+
+    <h1 class="text-center my-5">Create a user .csv</h1>
+    <div class="row mt-5">
+        <div class="col-10 col-lg-6 offset-lg-3 form-group">
+            {{ form_start(userCsvForm) }}
+            {{ form_widget(userCsvForm) }}
+
+
+            {{ form_end(userCsvForm) }}
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col d-flex justify-content-center mt-5">
+            <button class="btn bouton">Create</button>
+        </div>
+    </div>
+
+{% endblock %}
+
+{% block title %}
+    {{ parent() }} | Create a user from a CSV
+{% endblock %}
+

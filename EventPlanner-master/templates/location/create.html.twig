@@ -1,0 +1,35 @@
+{% extends 'view/base.html.twig' %}
+
+{% block title %}
+    {{ parent() }} Create a location !
+{% endblock %}
+
+{% block body %}
+
+    <h1 class="text-center my-5">Create a new location</h1>
+
+    <div class="row d-flex justify-content-center">
+        <div class="col-xl-6 col-md-8 ">
+            {{ form_start(locationForm) }}
+            {{ form_errors(locationForm) }}
+            {{ form_row(locationForm.name) }}
+            {{ form_row(locationForm.street) }}
+            {{ form_row(locationForm.latitude) }}
+            {{ form_row(locationForm.longitude) }}
+            {{ form_row(locationForm.city) }} {# id: location_city #}
+        </div>
+    </div>
+    <div class="row d-flex justify-content-center">
+        <div class="col-xl-3 col-md-6 d-flex justify-content-around my-3">
+            <button id="register" name="register" class="btn bouton" value="register">Register</button>
+            <button class="btn bouton" onclick="history.back()">Back to the creation</button>
+            {{ form_end(locationForm) }}
+        </div>
+    </div>
+{% endblock %}
+
+
+
+
+
+

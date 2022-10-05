@@ -1,0 +1,21 @@
+{% extends 'view/base.html.twig' %}
+{% block title %}
+{% endblock %}
+{% block body %}
+    <h1 class="text-center my-5">My account</h1>
+
+            {{ form_start(userForm) }}
+    <div class="row d-flex justify-content-center mt-5">
+        <div class=" col-10 col-sm-7">
+            {{ form_widget(userForm) }}
+        </div>
+            {{ form_end(userForm) }}
+    </div>
+    <div class="row d-flex justify-content-center mt-3">
+        <div class="col-4 col-lg-3 col-md-4 d-flex justify-content-around">
+            <button class="btn bouton">Save</button>
+            <button class="btn bouton">Cancel</button>
+        </div>
+    </div>
+
+{% endblock %}

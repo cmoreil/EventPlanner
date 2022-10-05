@@ -1,0 +1,60 @@
+{% extends 'view/base.html.twig' %}
+{%block title %}
+    {{ parent() }} site
+{% endblock %}
+
+{% block body %}
+
+    <h1 class="text-center my-5">Manage sites</h1>
+
+    <div class="row d-flex justify-content-center">
+    <div class="col-sm-5 ">
+    <table class="table table-striped table-bordered table-hover">
+        <thead>
+            <tr>
+                <th>
+                    Site
+                </th>
+                <th>
+                    Actions
+                </th>
+            </tr>
+        </thead>
+        {% for site in sites %}
+            {% if site.id == id %}
+                <tr>
+                    {{ form_start(siteForm) }}
+                    <td>
+                        {{ form_widget(siteForm) }}
+                    </td>
+                    <td>
+                        <button>Update</button>
+                    </td>
+                    {{ form_end(siteForm) }}
+                </tr>
+                {% else %}
+                <tr>
+                    <td>{{ site.name }}</td>
+                    <td><a class="text-bleu" href="{{ path('admin_update_site', {'id': site.id}) }}">Update</a> -
+                            <a class="text-bleu" href="{{ path('admin_delete_site', {'id': site.id}) }}">Delete</a></td>
+                </tr>
+            {% endif %}
+        {% endfor %}
+        {% if id %}
+            </table>
+        {% else %}
+        <tr>
+            {{ form_start(siteForm) }}
+            <td>
+                {{ form_widget(siteForm) }}
+            </td>
+            <td>
+                <button class="btn bouton d-flex mx-auto">Add</button>
+            </td>
+            {{ form_end(siteForm) }}
+        </tr>
+        {% endif %}
+    </table>
+    </div>
+    </div>
+{% endblock %}

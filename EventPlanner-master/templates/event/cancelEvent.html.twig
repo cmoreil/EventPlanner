@@ -1,0 +1,24 @@
+{% extends 'view/base.html.twig' %}
+{% block title %}
+    {{ parent() }} Cancel an event
+{% endblock %}
+{% block body %}
+    <div class="row">
+        <div class="col text-center mb-5 mt-5">
+            <h2>Cancel an event</h2>
+        </div>
+    </div>
+    <div class="row d-flex justify-content-center ">
+        <div class="col-lg-4 offset-lg-2">
+            <p>Event name : {{ event.name }}</p>
+            <p>Event date : {{ event.startDateTime|date('Y-m-d H:i:s') }}</p>
+            <p>Organizing city : {{ event.referentSite.name}}</p>
+            <p>Location : {{ event.location.name }} {{ event.location.street }} {{event.location.city.zipCode }} {{ event.location.city.name }}</p>
+            <form action="{{ path('event_cancel', {'eventId' : event.id}) }}" method="post">
+                <p><label for="motif">Motif : </label><textarea id="motif" name="motif"></textarea></p>
+                <button type="submit" class="btn bouton">Cancel event</button>
+                <button class="btn bouton">Cancel</button>
+            </form>
+        </div>
+    </div>
+{% endblock %}

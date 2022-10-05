@@ -1,0 +1,94 @@
+{# <nav class="navbar navbar-expand-xl navbar-light mx-5"> #}
+{#    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavDropdown" #}
+{#            aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation"> #}
+{#        <span class="navbar-toggler-icon"></span> #}
+{#    </button> #}
+{#    <div class="collapse navbar-collapse " id="navbarNavDropdown"> #}
+{#        <ul class="navbar-nav"> #}
+{#            <li class="nav-item mx-3 d-flex align-items-center"> #}
+{#                {% if app.user %} #}
+{#                <a href="{{ path('event_list') }}" title="list-events">List of events</a> #}
+{#            </li> #}
+{#            <li class="nav-item mx-3 align-items-center d-none d-md-flex"> #}
+{#                <a href="{{ path('event_create') }}" title="event-create">Create an event</a> #}
+{#            </li> #}
+{#            <li class="nav-item mx-3 align-items-center d-none d-md-flex"> #}
+{#                <a href="{{ path('user_update') }}" title="user-update">My profile</a> #}
+{#            </li> #}
+{#            <li class="nav-item mx-3 d-flex align-items-center"> #}
+{#                <a href="{{ path('app_logout') }}" title="logout">Log out</a> #}
+{#            </li> #}
+{#            {% endif %} #}
+
+{#            <li class="nav-item dropdown mx-4 d-none d-md-flex">#}
+{#                {% if is_granted("ROLE_ADMIN") %}#}
+{#                    <a class=" dropdown-toggle" href="{{ path('admin_dashboard') }}"#}
+{#                       id="navbarDropdownMenuLink" role="button"#}
+{#                       data-bs-toggle="dropdown" aria-expanded="false">#}
+{#                        Dashboard#}
+{#                    </a>#}
+{#                {% endif %}#}
+{#                <ul class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">#}
+{#                    <li><a class="dropdown-item" href="{{ path('admin_create_user') }}">Create a user</a></li>#}
+{#                    <li><a class="dropdown-item" href="{{ path('admin_listUsers') }}">Users list</a></li>#}
+{#                    <li><a class="dropdown-item" href="{{ path('admin_create_site') }}">Create a site</a></li>#}
+{#                    <li><a class="dropdown-item" href="{{ path('admin_create_city') }}">Create a city</a></li>#}
+{#                    <li><a class="dropdown-item" href="{{ path('admin_create_user_csv') }}">Create a User CSV</a></li>#}
+{#                    <li><a class="dropdown-item" href="{{ path('admin_dashboard') }}">Dashboard</a></li>#}
+{#                </ul>#}
+{#            </li>#}
+{#        </ul>#}
+{#    </div>#}
+{# </nav>#}
+
+<nav class="navbar navbar-expand-xl navbar-light ">
+    <div class="container-fluid">
+        <a class="navbar-brand" href="{{ path('main_home') }}" class="img-fluid"><img class="logo"
+                                                                 src="{{ asset('images/Logo_eventPlanner_transparent.png') }}"
+                                                                 alt="The Event Planner by ENI"></a>
+
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav">
+                <li class="nav-item">
+                    {% if app.user %}
+                    <a class="nav-link " href="{{ path('event_list') }}">Events list</a>
+                </li>
+                <li class="nav-item d-none d-md-flex">
+                    <a class="nav-link" href="{{ path('event_create') }}">Create an event</a>
+                </li>
+                <li class="nav-item d-none d-md-flex">
+                    <a class="nav-link" href="{{ path('user_update') }}">Update a user</a>
+                </li>
+                {% endif %}
+
+
+            </ul>
+            <li class="nav-item dropdown mx-4 d-none d-md-flex">
+                {% if is_granted("ROLE_ADMIN") %}
+                    <a class=" dropdown-toggle" href="{{ path('admin_dashboard') }}"
+                       id="navbarDropdownMenuLink" role="button"
+                       data-bs-toggle="dropdown" aria-expanded="false">
+                        Dashboard
+                    </a>
+                {% endif %}
+                <ul class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+                    <li><a class="dropdown-item" href="{{ path('admin_create_user') }}">Create a user</a></li>
+                    <li><a class="dropdown-item" href="{{ path('admin_listUsers') }}">Users list</a></li>
+                    <li><a class="dropdown-item" href="{{ path('admin_create_site') }}">Create a site</a></li>
+                    <li><a class="dropdown-item" href="{{ path('admin_create_city') }}">Create a city</a></li>
+                    <li><a class="dropdown-item" href="{{ path('admin_create_user_csv') }}">Create a User CSV</a></li>
+                    <li><a class="dropdown-item" href="{{ path('admin_dashboard') }}">Dashboard</a></li>
+                </ul>
+            </li>
+            {% if app.user %}
+            <li class="nav-item">
+                <a class="nav-link text-noir-mat" href="{{ path('app_logout') }}" >Logout</a>
+            </li>
+            {% endif %}
+        </div>
+    </div>
+</nav>
+

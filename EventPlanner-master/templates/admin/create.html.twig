@@ -1,0 +1,35 @@
+{% extends 'view/base.html.twig' %}
+
+{% block body %}
+
+    <h1 class="text-center my-5">Create a user</h1>
+    <div class="row d-flex justify-content-center mt-5">
+        <div class="col-10 col-lg-6 form-group">
+            {{ form_start(userForm) }}
+            {{ form_row(userForm.email) }}
+            {{ form_row(userForm.username) }}
+            {{ form_row(userForm.phoneNumber) }}
+            {{ form_row(userForm.lastName) }}
+            {{ form_row(userForm.firstName) }}
+            {{ form_row(userForm.password) }}
+            {{ form_widget(userForm.confirmPassword, {'attr' : { 'hidden':'true', 'value':'123456'}}) }}
+            {{ form_row(userForm.site) }}
+            {{ form_row(userForm.picture) }}
+            <div class="row">
+                <div class="col d-flex justify-content-center mt-3">
+                    <button class="btn bouton">Create</button>
+                </div>
+            </div>
+
+            {{ form_end(userForm) }}
+        </div>
+    </div>
+
+
+
+{% endblock %}
+
+{% block title %}
+    {{ parent() }}  | Create a user
+{% endblock %}
+

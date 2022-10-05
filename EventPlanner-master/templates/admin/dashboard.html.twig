@@ -1,0 +1,30 @@
+{% extends 'view/base.html.twig' %}
+
+{% block body %}
+    <h1 class="text-center my-5">Dashboard</h1>
+    <div class="row d-flex justify-content-center my-4">
+        <div class="col-10 col-lg-6 d-flex justify-content-around">
+            <a class="btn bouton" href="{{ path('admin_create_user') }}">Create a user</a>
+            <a class="btn bouton" href="{{ path('admin_create_user_csv') }}">Create a user.csv</a>
+        </div>
+        <div class="row d-flex justify-content-center mt-5 ">
+            <div class="col-10 col-lg-5 d-flex justify-content-center">
+                <a class="btn bouton" href="{{ path('admin_listUsers') }}">All users</a>
+            </div>
+        </div>
+    </div>
+    <div class="row d-flex justify-content-center mt-5 ">
+        <div class="col-10 col-lg-5 d-flex justify-content-around">
+            <a class="btn bouton" href="{{ path('admin_create_city') }}">Add a city</a>
+            <a class="btn bouton" href="{{ path('admin_create_site') }}">Add a site</a>
+        </div>
+    </div>
+
+
+
+{% endblock %}
+
+{% block title %}
+    {{ parent() }} | Dashboard
+{% endblock %}
+

@@ -1,0 +1,125 @@
+{% extends 'view/base.html.twig' %}
+
+
+{% block body %}
+
+<div class="row mt-4">
+    <div class="col-12 text-end pe-5">
+        <p><b>Today's date: {{ "now"|date('F d, Y') }}</b></p>
+        <p><b>Participant: {{app.user.username }}</b></p>
+    </div>
+</div>
+<div class="row mt-5">
+    <div class="col-11 col-md-10 mx-auto form-group">
+
+        {{ form_start(searchDataForm) }}
+        <div class="row">
+            <div class="col-md-9 col-lg-7">
+                {{ form_row(searchDataForm.referentSite) }}
+                {{ form_row(searchDataForm.eventNameContains) }}
+                <div class="row">
+                    <div class="col-lg-6">
+                {{ form_row(searchDataForm.fromSearchDateTime) }}
+                    </div>
+                    <div class="col-lg-6">
+                {{ form_row(searchDataForm.toSearchDateTime) }}
+                    </div>
+                </div>
+            </div>
+            <div class="col-11 col-lg-4">
+                {{ form_row(searchDataForm.connectedUserIsOrganizing) }}
+                {{ form_row(searchDataForm.connectedUserIsRegistered) }}
+                {{ form_row(searchDataForm.connectedUserIsNotRegistered) }}
+                {{ form_row(searchDataForm.cancelledEvents) }}
+            </div>
+
+            <div class="col-2 col-lg-1 mx-auto justify-content-center">
+                <button class="btn bouton">Search</button>
+            </div>
+        </div>
+        {{ form_end(searchDataForm) }}
+    </div>
+</div>
+
+<!--Affichage des sorties-->
+<div class="row mt-5">
+    <div class="col-11 col-md-11 mx-auto">
+        <table class="table table-bordered">
+            <thead>
+            <tr>
+                <th>Event Name</th>
+                <th>Start</th>
+                <th class="d-none d-md-table-cell">End</th>
+                <th class="d-none d-md-table-cell">Participants / Max</th>
+                <th class="d-none d-md-table-cell">Status</th>
+                <th class="d-none d-md-table-cell">Registered</th>
+                <th class="d-none d-lg-table-cell">Organizer</th>
+                <th class="d-none d-lg-table-cell">Actions</th>
+                <th class="d-md-none">City</th>
+            </tr>
+            </thead>
+            <tbody>
+
+             {% for event in events  %}
+             <tr>
+                {% if ((event.status.label != "CREATED") or (app.user.id == event.organizer.id)) and (event.status.label != "ARCHIVED") %}
+
+                    <td><a href="{{ path('event_show', {'id': event.id}) }}">{{ event.name }}</a></td>
+                    <td>{{ event.startDateTime | date('Y-m-d H:i')}}</td>
+                    <td class="d-none d-md-table-cell">{{ event.endDateTime | date('Y-m-d H:i') }}</td>
+                    <td class="d-none d-md-table-cell">{{ event.participants|length }} / {{ event.maxCapacity }}</td>
+                    <td class="d-none d-md-table-cell">{{ event.status.label }}</td>
+
+                    {% if app.user in event.participants %}
+                        <td class="text-center d-none d-md-table-cell">X</td>
+                    {% else %}
+                        <td class="d-none d-md-table-cell"></td>
+                    {% endif %}
+
+                    <td class="d-none d-lg-table-cell">{{ event.organizer.username }}</td>
+                     <!--Action-->
+                    <td class="d-none d-lg-table-cell">
+                    {% if app.user in event.participants %}
+                        <a href="{{ path('event_desist', {'eventId': event.id}) }}">Unregister</a>
+                    {% endif %}
+                    {% if (date(event.registrationLimit) > date()) and (event.status.label == "OPENED")
+                        and (event.participants|length < event.maxCapacity) and (app.user not in event.participants)%}
+                        <a href="{{ path('event_register', {'eventId': event.id}) }}">Register</a>
+                    {% endif %}
+
+                    {% if app.user.id == event.organizer.id %}
+                    <span class="pe-md-1"><a href="{{ path('event_update', {'eventId': event.id}) }}">Update</a></span>
+                        {% if event.status.label != "CANCELLED" %}
+                            <span><a href="{{ path('event_cancel', {'eventId': event.id}) }}">Cancel</a></span>
+                        {% endif %}
+                    {% endif %}
+                    </td>
+                    {% if event.location.city is defined %}
+                        <td class="d-md-none">{{ event.location.city.name }}</td>
+                    {% else %}
+                        <td class="d-md-none">TBD</td>
+                    {% endif %}
+                {% endif %}
+             </tr>
+            {% endfor %}
+
+            </tbody>
+        </table>
+    </div>
+</div>
+<div class="row mt-5">
+    <div class="col-4 col-md-2 mx-auto">
+        <button class="btn bouton"><a href="{{ path('event_create') }}">Create an event</a></button>
+    </div>
+</div>
+{% endblock %}
+
+
+
+
+
+
+
+
+
+

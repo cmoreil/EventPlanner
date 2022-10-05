@@ -1,0 +1,148 @@
+{% extends 'view/base.html.twig' %}
+
+{% block title %}
+    {{ parent() }} Create an event !
+{% endblock %}
+
+{% block body %}
+    <div class="container">
+        <h1 class="text-center my-5">Create an event</h1>
+        <div class="row d-flex justify-content-around">
+            <div class="col-lg-5">
+                <div class="row">
+                    <div class="col">{{ form_start(eventForm) }}
+                    </div>
+                    <div class="col">{{ form_errors(eventForm) }}</div>
+                </div>
+                <div class="row">
+                    <div class="col">{{ form_label(eventForm.name) }}
+                    </div>
+                    <div class="col">{{ form_widget(eventForm.name) }}</div>
+                </div>
+                <div class="row my-3">
+                    <div class="col">{{ form_label(eventForm.startDateTime) }}
+                    </div>
+                    <div class="col">{{ form_widget(eventForm.startDateTime) }}</div>
+                </div>
+                <div class="row">
+                    <div class="col">{{ form_label(eventForm.endDateTime) }}
+                    </div>
+                    <div class="col">{{ form_widget(eventForm.endDateTime) }}</div>
+                </div>
+                <div class="row my-3">
+                    <div class="col">{{ form_label(eventForm.registrationLimit) }}
+                    </div>
+                    <div class="col">{{ form_widget(eventForm.registrationLimit) }}</div>
+                </div>
+                <div class="row">
+                    <div class="col">
+                        {{ form_label(eventForm.maxCapacity) }}
+                    </div>
+                    <div class="col">{{ form_widget(eventForm.maxCapacity) }}
+                    </div>
+                </div>
+                <div class="row my-3">
+                    <div class="col">{{ form_label(eventForm.description) }}
+                    </div>
+                    <div class="col">{{ form_widget(eventForm.description) }}</div>
+                </div>
+
+
+            </div>
+
+            <div class="col-lg-5">
+                <p class="mb-4"><b>Host city</b> : {{ app.user.site.name }}</p>
+                {{ form_row(eventForm.city) }} {# <select id="event_city" #}
+                <div class="row ">
+                    <div class="col d-flex justify-content-around">
+                        {{ form_label(eventForm.location) }}
+                        {{ form_widget(eventForm.location) }}
+                        <a class="plus-satan" href="{{ path('location_create') }}">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="currentColor"
+                                 class="bi bi-plus-circle" viewBox="0 0 16 16">
+                                <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"/>
+                                <path d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4z"/>
+                            </svg>
+                        </a> {# select id="event_location" #}
+                    </div>
+
+                </div>
+                <div id="location-street" class="my-3"></div>
+                <div id="location-zipcode" class="mb-3"></div>
+                <div id="location-latitude" class="mb-3"></div>
+                <div id="location-longitude"></div>
+            </div>
+            <div class="col-lg-1">
+
+            </div>
+
+
+        </div>
+
+
+        <div class="row d-flex justify-content-center mt-3">
+            <div class="col-lg-4 d-flex justify-content-around">
+                <button id="register" name="register" class="btn bouton" value="register">Register</button>
+                <button id="publish" name="publish" class="btn bouton" value="publish">Publish</button>
+                <button class="btn bouton" onclick="history.back()">Cancel</button>
+                {{ form_end(eventForm) }}
+            </div>
+        </div>
+
+    </div>
+
+
+{% endblock %}
+
+    {% block extraJs %}
+        <script>
+            var city = document.getElementById("event_city");
+            city.onchange = function () {
+                let data = {cityId: city.value};
+                //utilisation de fetch pour lancer une requête asynchrone
+                fetch("{{ path('api_locations_updateLocations') }}", {method: 'POST', body: JSON.stringify(data)})
+                    .then(function (response) {
+                        return response.json();
+                    }).then(function (data) {
+                        var locations = JSON.parse(data);
+                        var select = document.getElementById("event_location");
+                        for (let location of locations) {
+                            select.add(new Option(location.name, location.id));
+                        }
+
+                    }
+                )
+            }
+
+            let locationEvent = document.getElementById("event_location");
+            let locationCity = document.getElementById("event_city");
+            locationEvent.onchange = function () {
+                let data = {locationId: locationEvent.value};
+                //utilisation de fetch pour lancer une requête asynchrone
+                fetch("{{ path('api_locations_infoLocations') }}", {method: 'POST', body: JSON.stringify(data)})
+                    .then(function (response) {
+                        return response.json();
+                    }).then(function (data) {
+                        var locationEventInfos = JSON.parse(data);
+                        console.log(locationEventInfos);
+                        document.getElementById('location-street').innerText = "Street : " + locationEventInfos.street;
+
+                        //recherche complémentaire pour zipcode :
+                        let data2 = {CityId: locationCity.value};
+                        //utilisation de fetch pour lancer une requête asynchrone
+                        fetch("{{ path('api_locations_infoCity') }}", {method: 'POST', body: JSON.stringify(data2)})
+                            .then(function (response) {
+                                return response.json();
+                            }).then(function (data) {
+                            var cityZipcode = JSON.parse(data);
+                            console.log(cityZipcode);
+                            document.getElementById('location-zipcode').innerText = "Zipcode : " + cityZipcode.zipCode;
+                        })
+                        //et reprise affichage des éléments du précédent fetch
+                        document.getElementById('location-latitude').innerText = "Latitude : " + locationEventInfos.latitude;
+                        document.getElementById('location-longitude').innerText = "Longitude : " + locationEventInfos.longitude;
+                    }
+                )
+            }
+        </script>
+    {% endblock %}

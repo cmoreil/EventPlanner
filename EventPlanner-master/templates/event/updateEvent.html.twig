@@ -1,0 +1,117 @@
+{% extends 'view/base.html.twig' %}
+{% block title %}
+    {{ parent() }} Update an event...
+{% endblock %}
+{% block body %}
+    <h1 class="text-center my-5">Update an event</h1>
+
+        <div class="row d-flex justify-content-center">
+            <div class="col-lg-4">
+                <div>
+                    {{ form_start(eventForm) }}
+                </div>
+                <div>
+                    {{ form_errors(eventForm) }}
+                </div>
+                <div>
+                    {{ form_row(eventForm.name) }}
+                </div>
+                <div class="my-4 col d-flex justify-content-around">
+                    {{ form_label(eventForm.startDateTime) }}{{ form_widget(eventForm.startDateTime) }}
+                </div>
+                <div class="my-4 col d-flex justify-content-around">
+                    {{ form_label(eventForm.endDateTime) }}{{ form_widget(eventForm.endDateTime) }}
+                </div>
+                <div class="my-4 col d-flex justify-content-around">
+                    {{ form_label(eventForm.registrationLimit) }}{{ form_widget(eventForm.registrationLimit) }}
+                </div>
+                <div>
+                    {{ form_row(eventForm.maxCapacity) }}
+                </div>
+                <div>
+                    {{ form_row(eventForm.description) }}
+                </div>
+                <div class="my-4">
+                    {{ form_row(eventForm.city) }}
+                </div>
+                <div class="row ">
+                    <div class="col d-flex justify-content-around">
+                        {{ form_label(eventForm.location) }}{{ form_widget(eventForm.location) }}<a class="plus-satan"
+                                                                                                    href="{{ path('location_add', {"eventId":event.id}) }}">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="currentColor"
+                                 class="bi bi-plus-circle" viewBox="0 0 16 16">
+                                <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"/>
+                                <path d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4z"/>
+                            </svg>
+                        </a> {# select id="event_location" #}    </div>
+                </div>
+                <div class="my-4">
+                    <div id="location-street"></div>
+                </div>
+                <div class="my-4">
+                    <div id="location-zipcode"></div>
+                </div>
+                <div class="my-4">
+                    <div id="location-latitude"></div>
+                </div>
+                <div class="mt-4">
+                    <div id="location-longitude"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row d-flex justify-content-center">
+        <div class="my-4 col-lg-4 d-flex justify-content-around">
+            <button class="btn bg-bleu text-noir-mat" name="save">Save event</button>
+            <button class="btn bg-bleu text-noir-mat" name="publish">Publish event</button>
+            <a class="btn bg-bleu text-noir-mat" href="{{ path('event_cancel', {"eventId":event.id}) }}">
+                Cancel event</a>
+            <a class="btn bg-bleu text-noir-mat" href="{{ path('event_list') }}">
+                Abort
+            </a>
+            {{ form_end(eventForm) }}
+        </div>
+    </div>
+
+{% endblock %}
+
+{% block extraJs %}
+    <script>
+
+        var city = document.getElementById("update_event_city");
+        city.onchange = function () {
+            let data = {cityId: city.value};
+            //utilisation de fetch pour lancer une requête asynchrone
+            fetch("{{ path('api_locations_updateLocations') }}", {method: 'POST', body: JSON.stringify(data)})
+                .then(function (response) {
+                    return response.json();
+                }).then(function (data) {
+                    var locations = JSON.parse(data);
+                    var select = document.getElementById("update_event_location");
+                    select.options.length = 0;
+                    for (let location of locations) {
+                        select.add(new Option(location.name, location.id));
+                    }
+                }
+            )
+        }
+
+
+        let locationEvent = document.getElementById("update_event_location");
+        locationEvent.onchange = function () {
+            let data = {locationId: locationEvent.value};
+            //utilisation de fetch pour lancer une requête asynchrone
+            fetch("{{ path('api_locations_infoLocations') }}", {method: 'POST', body: JSON.stringify(data)})
+                .then(function (response) {
+                    return response.json();
+                }).then(function (data) {
+                    var locationEventInfos = JSON.parse(data);
+                    //console.log(locationEventInfos);
+                    document.getElementById('location-street').innerText = "Street : " + locationEventInfos.street;
+                    document.getElementById('location-latitude').innerText = "Latitude : " + locationEventInfos.latitude;
+                    document.getElementById('location-longitude').innerText = "Longitude : " + locationEventInfos.longitude;
+                }
+            )
+        }
+    </script>
+{% endblock %}

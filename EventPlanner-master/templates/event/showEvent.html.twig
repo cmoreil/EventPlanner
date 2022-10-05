@@ -1,0 +1,73 @@
+{% extends 'view/base.html.twig' %}
+
+{% block body %}
+    <h1 class="text-center my-5">{{ event.name }}</h1>
+    <div class="row d-flex justify-content-center ">
+        <div class="col-lg-4 offset-lg-2">
+            <p>Event's name : {{ event.name }}</p>
+            <p>Event's start date : {{ event.startDateTime|date('Y-m-d H:i:s') }}</p>
+            <p>Registration limit date : {{ event.registrationLimit|date('Y-m-d H:i:s') }}</p>
+            <p>Max capacity : {{ nbrePlacesUtilisees }} / {{ event.maxCapacity }}</p>
+            <p>Event's end date : {{ event.endDateTime|date('Y-m-d H:i:s') }}</p>
+            <p>Description : {{ event.description }}</p>
+        </div>
+        <div class="col-lg-4 offset-lg-1 mb-3">
+            <p>City : {{ event.location.city.name }}</p>
+            <p>Location : {{ event.location.name }}</p>
+            <p>Street : {{ event.location.street }}</p>
+            <p>Zip code : {{ event.location.city.zipCode }}</p>
+            <p>Latitude : {{ event.location.latitude }}</p>
+            <p>Longitude : {{ event.location.longitude }}</p>
+        </div>
+    </div>
+    <div>
+        <div class="row d-flex justify-content-center my-3">
+            <div class="col-lg-3  d-flex justify-content-around">
+                {% if (nbrePlacesUtilisees >= event.maxCapacity or event.registrationLimit < today) %}
+                    <p>Complet/Fini</p>
+                {% elseif userConnected in participants %}
+                    <p>vous êtes déja inscrit(e)</p>
+                {% else %}
+                    <a class="btn bg-bleu text-noir-mat" href="{{ path('event_register',{'eventId' : event.id}) }}">S'inscrire</a>
+                {% endif %}
+                {% if userConnected in participants %}
+                    {% if event.registrationLimit > today %}
+                        <a class="btn bg-bleu text-noir-mat " href="{{ path('event_desist',{'eventId' : event.id}) }}">Se
+                            désister </a>
+                    {% endif %}
+                {% endif %}
+            </div>
+        </div>
+        <div class="row d-flex justify-content-center my-4">
+            <div class="col-lg-6 text-center ">
+                <h3>Liste des participants : </h3>
+            </div>
+            <div class="row ">
+                <div class="col d-flex justify-content-center text-center ">
+                    <table>
+                        <tr>
+                            <th>Pseudo</th>
+                            <th>Nom</th>
+                            <th>Prénom</th>
+                        </tr>
+                        {% for participant in participants %}
+                            <tr>
+                                <td>
+                                    <a href="{{ path('user_show',{'id' : participant.id}) }}">{{ participant.username }}</a>
+                                </td>
+                                <td>{{ participant.lastName }}</td>
+                                <td>{{ participant.firstName }}</td>
+                            </tr>
+                        {% endfor %}
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+{% endblock %}
+
+{% block title %}
+    {{ parent() }} | Show Event
+{% endblock %}
